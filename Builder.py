@@ -13,6 +13,8 @@ class Builder:
     def __init__(self, drawing_panel):
         self.drawing_panel = drawing_panel
 
+    coordinates = {}
+
     @staticmethod
     def get_tokens(input_tokens):
         tokens = []
@@ -42,10 +44,7 @@ class Builder:
 
                     switch_case = input_tokens[1].get_value().rstrip(';')
                     if "ПРЯМ" in switch_case:
-                        data = input_tokens[data_index:]
-                        for i in data:
-                            print(i)
-                        self.build_line(identifiers, data)
+                        self.build_line(identifiers, input_tokens[data_index:])
                     elif "ТОЧК" in switch_case:
                         self.build_point(identifiers, input_tokens[data_index:])
                     elif "ТРИКУТНИК" in switch_case:
@@ -75,15 +74,26 @@ class Builder:
         point_b = None
 
         for i, token in enumerate(data):
+            key_x = identifiers[0].get_value()
+            key_y = identifiers[1].get_value()
+
             if token.get_type() == Lexer.TypeToken.IDENTIFIER:
                 if identifiers[0].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_a = Point(x, y)
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_a = Point(x, y)
+                        self.coordinates[key_x] = point_a
+                    except:
+                        point_a = self.coordinates[key_x]
                 elif identifiers[1].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_b = Point(x, y)
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_b = Point(x, y)
+                        self.coordinates[key_y] = point_b
+                    except:
+                        point_b = self.coordinates[key_y]
 
         if point_a is not None and point_b is not None:
             line = Line(point_a, point_b)
@@ -104,11 +114,21 @@ class Builder:
                 self.print_error_message("Invalid input data: data doesn't include enough information to init objects")
                 return
 
+        point_a = None
+
+        for i, token in enumerate(data):
+            key_x = identifiers[0].get_value()
+
         for token in data:
             if token.get_type() == Lexer.TypeToken.IDENTIFIER:
-                x = int(data[data.index(token) + 2].get_value())
-                y = int(data[data.index(token) + 4].get_value())
-                point_a = Point(x, y)
+                try:
+                    x = int(data[data.index(token) + 2].get_value())
+                    y = int(data[data.index(token) + 4].get_value())
+                    point_a = Point(x, y)
+                    self.coordinates[key_x] = point_a
+                except:
+                    point_a = self.coordinates[key_x]
+                   # self.coordinates[identifiers[0].get_value()] = point_a
 
                 self.drawing_panel.add_point(point_a)
 
@@ -130,19 +150,38 @@ class Builder:
         point_c = None
 
         for i, token in enumerate(data):
+            key_x = identifiers[0].get_value()
+            key_y = identifiers[1].get_value()
+            key_z = identifiers[2].get_value()
+
             if token.get_type() == Lexer.TypeToken.IDENTIFIER:
                 if identifiers[0].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_a = Point(x, y)
+                    raw_x = data[i + 2].get_value()
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_a = Point(x, y)
+                        self.coordinates[key_x] = point_a
+                    except:
+                        point_a = self.coordinates[key_x]
+
                 elif identifiers[1].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_b = Point(x, y)
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_b = Point(x, y)
+                        self.coordinates[key_y] = point_b
+                    except:
+                        point_b = self.coordinates[key_y]
+
                 elif identifiers[2].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_c = Point(x, y)
+                    try:
+                       x = int(data[i + 2].get_value())
+                       y = int(data[i + 4].get_value())
+                       point_c = Point(x, y)
+                       self.coordinates[key_z] = point_c
+                    except:
+                        point_c = self.coordinates[key_z]
 
         if point_a is not None and point_b is not None and point_c is not None:
             triangle = Triangle(point_a, point_b, point_c)
@@ -170,23 +209,46 @@ class Builder:
         point_d = None
 
         for i, token in enumerate(data):
+            key_x = identifiers[0].get_value()
+            key_y = identifiers[1].get_value()
+            key_z = identifiers[2].get_value()
+            key_v = identifiers[3].get_value()
+
+        for i, token in enumerate(data):
             if token.get_type() == Lexer.TypeToken.IDENTIFIER:
                 if identifiers[0].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_a = Point(x, y)
+                    try:
+                       x = int(data[i + 2].get_value())
+                       y = int(data[i + 4].get_value())
+                       point_a = Point(x, y)
+                       self.coordinates[key_x] = point_a
+                    except:
+                       point_a = self.coordinates[key_x]
+
                 elif identifiers[1].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_b = Point(x, y)
+                    try:
+                       x = int(data[i + 2].get_value())
+                       y = int(data[i + 4].get_value())
+                       point_b = Point(x, y)
+                       self.coordinates[key_y] = point_b
+                    except:
+                        point_b = self.coordinates[key_y]
                 elif identifiers[2].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_c = Point(x, y)
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_c = Point(x, y)
+                        self.coordinates[key_z] = point_c
+                    except:
+                        point_c = self.coordinates[key_z]
                 elif identifiers[3].get_value() == token.get_value():
-                    x = int(data[i + 2].get_value())
-                    y = int(data[i + 4].get_value())
-                    point_d = Point(x, y)
+                    try:
+                        x = int(data[i + 2].get_value())
+                        y = int(data[i + 4].get_value())
+                        point_d = Point(x, y)
+                        self.coordinates[key_v] = point_d
+                    except:
+                        point_d = self.coordinates[key_v]
 
         if point_a is not None and point_b is not None and point_c is not None and point_d is not None:
             rect = Rectangle(point_a, point_b, point_c, point_d)
